@@ -1,0 +1,35 @@
+<html>
+<style>
+
+form {
+    margin: auto;
+    width: 35%;
+ }
+
+.result {
+margin: center
+width: 100%;
+white-space: pre-line;
+border: 1px solid #ccc;
+}
+
+ </style>
+ <head>
+ <title>Prediction result</title>
+ </head>
+ <body>
+
+<!-- <form action="{{ url_for('upload') }}" method="POST">-->
+<!--    <fieldset>-->
+<!--       <input type="submit">-->
+<!--    </fieldset>-->
+<!-- </form>-->
+
+ <div class="result" align="center">
+     {% if result %}
+         <br>
+         <p style="font-size:40px">{{ result }}</p>
+     {% endif %}
+ </div>
+ <body>
+ </html>
