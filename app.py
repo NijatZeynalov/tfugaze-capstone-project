@@ -70,7 +70,7 @@ def upload():
         prediction = pd.read_csv(f'uploads/{filename}')
         ytrue = truev['LeaveOrNot']
         acc = accuracy_score(ytrue, prediction['0'])
-        if acc<80:
+        if acc<0.95:
             message = f"Accuracy is below than expected: {str(acc)}"
         else:
             message = f"Congratulations. Your model accuracy is: {str(acc)}"
