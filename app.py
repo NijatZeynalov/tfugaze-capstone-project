@@ -1,19 +1,29 @@
 #!/usr/bin/env python
 
 import os
-# We'll render HTML templates and access data sent by POST
-# using the request object from flask. Redirect and url_for
-# will be used to redirect the user once the upload is done
-# and send_from_directory will help us to send/show on the
-# browser the file that the user just uploaded
+from threading import Barrier
+from sklearn.metrics import mean_absolute_error
+import numpy as np
+import pandas as pd
+import tensorflow as tf
 from flask import Flask, render_template, request, redirect, url_for
 from flask import send_from_directory
 from werkzeug.utils import secure_filename
 import pandas as pd
-from sklearn.metrics import accuracy_score
-
+from sklearn.metrics import balanced_accuracy_score
 from flask import jsonify
 
+def prediction(predmodel):
+    xtest = np.loadtxt('xtest.txt', dtype=int)
+    ytest = np.loadtxt('ytest.txt', dtype=int)
+    model = tf.keras.models.load_model(predmodel)
+    y_pred = model.predict_classes(xtest)
+    print(y_pred)
+    acc = balanced_accuracy_score(ytest, y_pred)
+    print(acc)
+    return acc
+
+# Initialize the Flask application
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -21,13 +31,13 @@ app = Flask(__name__)
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 # These are the extension that we are accepting to be uploaded
-app.config['ALLOWED_EXTENSIONS'] = set(['csv'])
-app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB
+app.config['ALLOWED_EXTENSIONS'] = set(['h5'])
+app.config['MAX_CONTENT_LENGTH'] = 4 * 2048 * 2048  # 2MB
 
 # If the file you are trying to upload is too big, you'll get this message
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    message = 'The file is too large, my friend.<br>'
+    message = 'The file is too large.<br>'
     maxFileSizeKB = app.config['MAX_CONTENT_LENGTH']/(1024)
     message += "The biggest I can handle is " + str(maxFileSizeKB) + "KB"
     message += "<a href='" + url_for("index") + "'>Try again</a>"
@@ -43,9 +53,9 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
-
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
+
 def upload():
     # Get the name of the uploaded file
     file = request.files['file']
@@ -63,24 +73,14 @@ def upload():
     else:
         # Make the filename safe, remove unsupported chars
         filename = secure_filename(file.filename)
-        truev = pd.read_csv('uploads/new_customers.csv')
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(file)
-        print(filename)
-        prediction = pd.read_csv(f'uploads/{filename}')
-        ytrue = truev['LeaveOrNot']
-        acc = accuracy_score(ytrue, prediction['0'])
-        if acc<80:
-            message = f"Accuracy is below than expected: {str(acc)}"
+        mabser = prediction(f'uploads/{filename}')
+
+        if mabser<0.85:
+            message = f"Model accuracy less than expected. Your score in out-of-bag dataset: {str(mabser)}"
         else:
-            message = f"Congratulations. Your model accuracy is: {str(acc)}"
+            message = f"Congratulations. Your model score in out-of-bag dataset is: {str(mabser)}"
         return render_template('predict.html', result=message, )
-
-
-# This route is expecting a parameter containing the name
-# of a file. Then it will locate that file on the upload
-# directory and show it on the browser, so if the user uploads
-# an image, that image is going to be show after the upload
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -88,5 +88,5 @@ def uploaded_file(filename):
                                filename)
 
 if __name__=='__main__':
-	app.debug = True
-	app.run()
+    app.debug = True
+    app.run()
