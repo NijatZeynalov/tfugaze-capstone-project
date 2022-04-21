@@ -1,2 +1,4 @@
-# heroku-try-file-upload
-Try file uploads with Heroku
+# Heroku deployment
+
+Application that automatically score Capstone project for TensorFlow User Group - Azerbaijan's ML group
+

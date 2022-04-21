@@ -74,10 +74,12 @@ def upload():
         # Make the filename safe, remove unsupported chars
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         mabser = prediction(f'uploads/{filename}')
 
         if mabser<0.85:
             message = f"Model accuracy less than expected. Your score in out-of-bag dataset: {str(mabser)}"
+
         else:
             message = f"Congratulations. Your model score in out-of-bag dataset is: {str(mabser)}"
         return render_template('predict.html', result=message, )
@@ -87,6 +89,5 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
-if __name__=='__main__':
-    app.debug = True
-    app.run()
+if __name__ == '__main__':
+    app.run(host="0.0.0.0",port=8888,debug=False)
