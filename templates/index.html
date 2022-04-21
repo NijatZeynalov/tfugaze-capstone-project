@@ -7,20 +7,21 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1 class="text-muted">TensorFlow User Group - Azerbaijan : Capstone Project</h1>
-        <h3 class="text_t"> Imagine that you are a Data Scientist in a company. A company's HR department wants to predict whether some customers would leave the company in next 2 years.
-As a Data Scientist your job is to build a predictive model that predicts the prospects of future and present customers.
-They will offer specific packages to customers who are willing to leave company according to your model. </h3>
+        <h1 class="text-muted">TFUG AZERBAIJAN : Fake Job Description Prediction project</h1>
+        <h4 class="text_t"> PROBLEM DEFINITION: Employment scams are on the rise. According to CNBC, the number of employment scams doubled in 2018 as compared to 2017. Most scammers do this to get personal information from the person they are scamming. Personal information can contain addresses, bank account details, social security numbers, etc. The scammers provide users with a very lucrative job opportunity and later ask for money in return. Or they require investment from the job seeker with the promise of a job. This is a dangerous problem that can be addressed through Machine Learning techniques and Natural Language Processing. </h4>
+<h4 class="text_tw">This project aims to create a classifier that will have the capability to identify fake and real jobs.</h4>
 
+        <h4 class="text_tw">Since our classes are highly unbalanced, a high accuracy would represent how well our model categorizes the negative category. For this reason, we will evaluate your model based on balanced_accuracy metric. You can use reference notebook where pre-written code has been provided. </h4>
+          <h4 class="text_tw"> Please, submit only .h5 files. System will automatically evaluate your model in out-of-bag dataset, and send you corresponding message. </h4>
 
-<h3 class="text_tw">HR says that we want to loose less customer as possible. Although, it is money consuming but it is not problem to offer packages to customers who will not leave company.
-You need to consider it while you are dealing with FalsePositive and FalseNegative errors. </h3>
-
-        <h4 class="text_tw">Please, predict out-of-bag data and upload y_pred values only. System automatically will provide you with accuracy. </h4>
       </div>
       <hr/>
       <div>
-      
+
+          <form method="post">
+    Project file path: <input type="text" name="projectFilePath"><br>
+    </form>
+
       <form action="upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file"><br /><br />
         <input type="submit" value="Upload">
